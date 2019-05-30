@@ -80,6 +80,24 @@ class User extends Authenticatable
         }
     }
 
+    public function voteAnswer(Answer $answer, $vote)
+    {
+        if ($vote == -1 || $vote == 1) {
+            if ($this->voteAnswers()->where('votable_id', $answer->id)->exists()) {
+                $this->voteAnswers()->updateExistingPivot($answer, ['vote' => $vote]);
+            }
+            else {
+                $this->voteAnswers()->attach($answer,  ['vote' => $vote]);
+            }
+
+            $answer->load('votes');
+            $downvotes = (int)$answer->downVotes()->sum('vote');
+            $upvotes = (int)$answer->upVotes()->sum('vote');
+
+            $answer->votes_count = $upvotes + $downvotes;
+            $answer->save();
+        }
+    }
 
     /**
      * The attributes that should be cast to native types.
