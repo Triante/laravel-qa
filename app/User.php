@@ -40,6 +40,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Question::class, 'favorites')->withTimestamps(); //, 'user_id', 'question_id'); incase if id do not follow laravel schema conventions <model>_id
     }
 
+    public function voteQuestions()
+    {
+        return $this->morphedByMany(Question::class, 'votable');
+    }
+
+    public function voteAnswers()
+    {
+        return $this->morphedByMany(Answer::class, 'votable');
+    }
+
     public function getAvatarAttribute() {
         $email = $this->email;
         $size = 32;
@@ -51,6 +61,24 @@ class User extends Authenticatable
         return "#";
     }
 
+    public function voteQuestion(Question $question, $vote)
+    {
+        if ($vote == -1 || $vote == 1) {
+            if ($this->voteQuestions()->where('votable_id', $question->id)->exists()) {
+                $this->voteQuestions()->updateExistingPivot($question, ['vote' => $vote]);
+            }
+            else {
+                $this->voteQuestions()->attach($question,  ['vote' => $vote]);
+            }
+
+            $question->load('votes');
+            $downvotes = (int)$question->downVotes()->sum('vote');
+            $upvotes = (int)$question->upVotes()->sum('vote');
+
+            $question->votes_count = $upvotes + $downvotes;
+            $question->save();
+        }
+    }
 
 
     /**
