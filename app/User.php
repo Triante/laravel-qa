@@ -36,6 +36,10 @@ class User extends Authenticatable
         return $this->hasMany(Answer::class);
     }
 
+    public function favorites() {
+        return $this->belongsToMany(Question::class, 'favorites')->withTimestamps(); //, 'user_id', 'question_id'); incase if id do not follow laravel schema conventions <model>_id
+    }
+
     public function getAvatarAttribute() {
         $email = $this->email;
         $size = 32;
@@ -46,6 +50,7 @@ class User extends Authenticatable
     public function getUrlAttribute() {
         return "#";
     }
+
 
 
     /**
