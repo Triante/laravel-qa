@@ -16,6 +16,11 @@ class Question extends Model
         return $this->hasMany(Answer::class);
     }
 
+    public function acceptBestAnswer(Answer $answer) {
+        $this->best_answer_id = $answer->id;
+        $this->save();
+    }
+
     public function setTitleAttribute($value) {
         $this->attributes['title'] = $value;
         $this->attributes['slug'] = str_slug($value);
@@ -43,6 +48,5 @@ class Question extends Model
     public function getBodyHtmlAttribute() {
         return \Parsedown::instance()->text($this->body);
     }
-
     
 }
