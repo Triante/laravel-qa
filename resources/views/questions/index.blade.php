@@ -16,7 +16,7 @@
 
                 <div class="card-body">
                      @include ('layouts._messaged')
-                    @foreach ($questions as $question)
+                    @forelse ($questions as $question)
                     <div class="media">
                         <div class="d-flex flex-column counters">
                             <div class="vote">
@@ -51,12 +51,16 @@
                                 <small class="text-muted">{{$question->created_date}}</small>
                             </p>
                             <div class="exceprt">
-                                {!! $question->exceprt(350) !!}
+                                {!! $question->exceprt(250) !!}
                             </div>
                         </div> 
                     </div>
                     <hr>
-                    @endforeach
+                    @empty
+                        <div class="alert alert-warning">
+                            There are no questions available. Be the <strong>first</strong> one to ask!
+                        </div>
+                    @endforelse
 
                     <div class ="mx-auto">
                         {{$questions->links()}}
