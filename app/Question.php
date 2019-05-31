@@ -48,7 +48,7 @@ class Question extends Model
 
     public function Exceprt($length)
     {
-        return str_limit(clean($this->getHtmlBody()), $length);
+        return clean(str_limit($this->getHtmlBody(), $length));
     }
 
     public function isFavorited()
