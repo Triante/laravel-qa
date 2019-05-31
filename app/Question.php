@@ -40,7 +40,17 @@ class Question extends Model
     public function getCreatedDateAttribute() {
         return $this->created_at->diffForHumans();
     }
-    
+
+    public function getExceprtAttribute()
+    {
+        return $this->Exceprt(250);
+    }
+
+    public function Exceprt($length)
+    {
+        return str_limit(clean($this->getHtmlBody()), $length);
+    }
+
     public function isFavorited()
     {
         return $this->favorites()->where('user_id', auth()->id())->count() > 0;
@@ -67,6 +77,11 @@ class Question extends Model
     }
 
     public function getBodyHtmlAttribute() {
+        return clean($this->getHtmlBody());
+    }
+    
+    private function getHtmlBody()
+    {
         return \Parsedown::instance()->text($this->body);
     }
     
