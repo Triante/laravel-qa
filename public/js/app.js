@@ -10743,7 +10743,7 @@ __webpack_require__.r(__webpack_exports__);
     update: function update() {
       var _this = this;
 
-      axios.patch("/questions/".concat(this.questionId, "/answers/").concat(this.id), {
+      axios.patch(this.endpoint, {
         body: this.body
       }).then(function (res) {
         console.log(res.data.message);
@@ -10753,11 +10753,27 @@ __webpack_require__.r(__webpack_exports__);
         console.log("Something went wrong: " + err);
         alert(err.response.data.message);
       });
+    },
+    destroy: function destroy() {
+      var _this2 = this;
+
+      if (confirm('Are you sure?')) {
+        axios["delete"](this.endpoint).then(function (res) {
+          $(_this2.$el).fadeOut(500, function () {
+            console.log(res.data.message);
+          });
+        })["catch"](function (err) {
+          console.log(err);
+        });
+      }
     }
   },
   computed: {
     isInvalid: function isInvalid() {
       return this.body.length < 1;
+    },
+    endpoint: function endpoint() {
+      return "/questions/".concat(this.questionId, "/answers/").concat(this.id);
     }
   }
 });
