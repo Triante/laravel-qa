@@ -60,7 +60,6 @@ import UserInfo from './UserInfo';
 import MEditor from './MEditor';
 import modification from '../mixins/modification';
 
-
 import { setTimeout } from 'timers';
 export default {
     props: ['question'],
