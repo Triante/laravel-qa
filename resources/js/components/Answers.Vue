@@ -1,5 +1,5 @@
 <template>
-    <div class="row mt-4" v-cloak v-if="count > 0">
+    <div class="row mt-4" v-cloak v-if="count">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
@@ -8,6 +8,9 @@
                     </div>
                     <hr>
                     <answer v-for="answer in answers" :answer="answer" :key="answer.id"></answer>
+                    <div class="text-center mt-3" v-if="nextUrl">
+                        <button class="btn btn-outline-secondary" @click="fetch(nextUrl)">Load More Answers</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -17,7 +20,32 @@
 <script>
 import Answer from './Answer';
 export default {
-    props: ['answers', 'count'],
+    props: ['question'],
+
+    data() {
+        return {
+            questionId: this.question.id,
+            count: this.question.answers_count,
+            answers: [],
+            nextUrl: null
+        }
+    },
+
+    created () {
+        this.fetch(`/questions/${this.questionId}/answers`);
+    },
+
+    methods : {
+        fetch(endpoint) {
+            axios.get(endpoint)
+            .then(({data}) => {
+                console.log(data.data);
+                this.answers.push(...data.data);
+                this.nextUrl = data.next_page_url; 
+            })
+        }
+    },
+
     computed: {
         title() {
             return this.count + " " + (this.count > 1 ? 'Answers' : 'Answer');
