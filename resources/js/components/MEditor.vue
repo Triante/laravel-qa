@@ -21,6 +21,7 @@
 
 <script>
 import MarkdownIt from 'markdown-it';
+import AutoSize from 'autosize';
 const md = new MarkdownIt();
 export default {
     props: ['body'],
@@ -28,6 +29,12 @@ export default {
         preview() {
             return md.render(this.body);
         }
+    },
+    mounted() {
+        AutoSize(this.$el.querySelector('textarea'))
+    },
+    updated() {
+        AutoSize(this.$el.querySelector('textarea'))
     }
 }
 </script>
