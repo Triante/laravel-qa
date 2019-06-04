@@ -85,9 +85,7 @@ export default {
         
                     axios.delete(this.endpoint)
                     .then(res=> {
-                        $(this.$el).fadeOut(500, ()=> {
-                            this.$toast.success(res.data.message, "Success", {timeout: 3000});
-                        })
+                        this.$emit('deleted')
                     })
                     .catch(err => {
                         console.log(err);
