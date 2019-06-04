@@ -22,12 +22,22 @@
 <script>
 import MarkdownIt from 'markdown-it';
 import AutoSize from 'autosize';
+import prism from 'markdown-it-prism';
+import 'prismjs/themes/prism.css';
+
 const md = new MarkdownIt();
+md.use(prism);
 export default {
     props: ['body'],
     computed: {
         preview() {
-            return md.render(this.body);
+            try {
+                return md.render(this.body);
+            }
+            catch(err) {
+                console.log(err);
+                return this.body;
+            }
         }
     },
     mounted() {
