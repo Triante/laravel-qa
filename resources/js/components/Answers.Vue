@@ -43,7 +43,6 @@ export default {
         remove(index) {
             this.answers.splice(index, 1);
             this.count--;
-            this.$toast.success(res.data.message, "Success", {timeout: 3000});
         },
         fetch(endpoint) {
             axios.get(endpoint)
