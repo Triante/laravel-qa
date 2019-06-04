@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import favoriteVue from './favorite.vue';
+import favoriteVue from './Favorite.vue';
 export default {
     props: ['question'],
     data() {
