@@ -85,7 +85,7 @@ export default {
         
                     axios.delete(this.endpoint)
                     .then(res=> {
-                        this.$emit('deleted')
+                        this.$emit('deleted');
                     })
                     .catch(err => {
                         console.log(err);
