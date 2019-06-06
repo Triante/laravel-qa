@@ -7,5 +7,8 @@ export default {
                 Prism.highlightAllUnder(this.$refs.bodyHtml);
             }
         }
+    },
+    mounted () {
+        this.highlight()
     }
 }
