@@ -59,7 +59,6 @@ import Vote from './Vote';
 import UserInfo from './UserInfo';
 import MEditor from './MEditor';
 import modification from '../mixins/modification';
-import Prism from 'prismjs';
 
 import { setTimeout } from 'timers';
 export default {
@@ -83,6 +82,7 @@ export default {
             return `/questions/${this.id}`;
         },
     },
+
     methods: {
         setEditCache() {
             this.beforeEditCache = {
@@ -93,9 +93,6 @@ export default {
         restoreFromCache() {
             this.body = this.beforeEditCache.body;
             this.title = this.beforeEditCache.title;
-            if (this.$refs.bodyHtml) {
-                Prism.highlightAllUnder(this.$refs.bodyHtml);
-            }
         },
         payload() {
             return {

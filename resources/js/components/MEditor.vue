@@ -40,9 +40,6 @@ export default {
             }
         }
     },
-    mounted() {
-        AutoSize(this.$el.querySelector('textarea'))
-    },
     updated() {
         AutoSize(this.$el.querySelector('textarea'))
     }

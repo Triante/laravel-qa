@@ -11392,9 +11392,6 @@ md.use(markdown_it_prism__WEBPACK_IMPORTED_MODULE_2___default.a);
       }
     }
   },
-  mounted: function mounted() {
-    autosize__WEBPACK_IMPORTED_MODULE_1___default()(this.$el.querySelector('textarea'));
-  },
   updated: function updated() {
     autosize__WEBPACK_IMPORTED_MODULE_1___default()(this.$el.querySelector('textarea'));
   }
@@ -11486,10 +11483,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _UserInfo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserInfo */ "./resources/js/components/UserInfo.vue");
 /* harmony import */ var _MEditor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MEditor */ "./resources/js/components/MEditor.vue");
 /* harmony import */ var _mixins_modification__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../mixins/modification */ "./resources/js/mixins/modification.js");
-/* harmony import */ var prismjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! prismjs */ "./node_modules/prismjs/prism.js");
-/* harmony import */ var prismjs__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(prismjs__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var timers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! timers */ "./node_modules/timers-browserify/main.js");
-/* harmony import */ var timers__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(timers__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var timers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! timers */ "./node_modules/timers-browserify/main.js");
+/* harmony import */ var timers__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(timers__WEBPACK_IMPORTED_MODULE_4__);
 //
 //
 //
@@ -11546,7 +11541,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 
 
@@ -11587,10 +11581,6 @@ __webpack_require__.r(__webpack_exports__);
     restoreFromCache: function restoreFromCache() {
       this.body = this.beforeEditCache.body;
       this.title = this.beforeEditCache.title;
-
-      if (this.$refs.bodyHtml) {
-        prismjs__WEBPACK_IMPORTED_MODULE_4___default.a.highlightAllUnder(this.$refs.bodyHtml);
-      }
     },
     payload: function payload() {
       return {
@@ -11608,7 +11598,7 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (err) {
         console.log(err);
       });
-      Object(timers__WEBPACK_IMPORTED_MODULE_5__["setTimeout"])(function () {
+      Object(timers__WEBPACK_IMPORTED_MODULE_4__["setTimeout"])(function () {
         window.location.href = "/questions";
       }, 3000);
     }
@@ -77716,6 +77706,30 @@ _fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_0__["dom"].watch();
 
 /***/ }),
 
+/***/ "./resources/js/mixins/highlight.js":
+/*!******************************************!*\
+  !*** ./resources/js/mixins/highlight.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var prismjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! prismjs */ "./node_modules/prismjs/prism.js");
+/* harmony import */ var prismjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prismjs__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  methods: {
+    highlight: function highlight() {
+      if (this.$refs.bodyHtml) {
+        prismjs__WEBPACK_IMPORTED_MODULE_0___default.a.highlightAllUnder(this.$refs.bodyHtml);
+      }
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/mixins/modification.js":
 /*!*********************************************!*\
   !*** ./resources/js/mixins/modification.js ***!
@@ -77725,7 +77739,10 @@ _fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_0__["dom"].watch();
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _highlight__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./highlight */ "./resources/js/mixins/highlight.js");
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  mixins: [_highlight__WEBPACK_IMPORTED_MODULE_0__["default"]],
   data: function data() {
     return {
       editing: false
@@ -77745,7 +77762,11 @@ __webpack_require__.r(__webpack_exports__);
     update: function update() {
       var _this = this;
 
-      axios.put(this.endpoint, this.payload()).then(function (res) {
+      axios.put(this.endpoint, this.payload())["catch"](function (err) {
+        _this.$toast.error(err.response.data.message, "Error", {
+          timeout: 3000
+        });
+      }).then(function (res) {
         _this.$toast.success(res.data.message, "Success", {
           timeout: 3000
         });
@@ -77753,10 +77774,8 @@ __webpack_require__.r(__webpack_exports__);
         _this.bodyHtml = res.data.body_html;
         _this.title = res.data.title;
         _this.editing = false;
-      })["catch"](function (err) {
-        _this.$toast.error(err.response.data.message, "Error", {
-          timeout: 3000
-        });
+      }).then(function () {
+        return _this.highlight();
       });
     },
     payload: function payload() {},

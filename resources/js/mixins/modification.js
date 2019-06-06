@@ -1,4 +1,7 @@
+import hightlight from './highlight';
+
 export default {
+    mixins: [hightlight],
     data() {
         return {
             editing: false,
@@ -17,15 +20,17 @@ export default {
         restoreFromCache() {},
         update() {
             axios.put(this.endpoint, this.payload())
+            .catch(err => {
+                this.$toast.error(err.response.data.message, "Error", {timeout: 3000});
+            })
             .then(res=> {
                 this.$toast.success(res.data.message, "Success", {timeout: 3000});
                 this.bodyHtml = res.data.body_html;
                 this.title = res.data.title;
                 this.editing = false;
-            })
-            .catch(err => {
-                this.$toast.error(err.response.data.message, "Error", {timeout: 3000});
-            })
+            }).
+            then(() => this.highlight());
+
         },
         payload() {},
         destroy() {
